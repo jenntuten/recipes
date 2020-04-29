@@ -47,6 +47,7 @@
 </head>
 
 <body>
+
   <form id="myForm">
     <h1>Test Form</h1>
     <fieldset>
@@ -54,6 +55,7 @@
       <textarea type="text" id="ingredients" name="ingredients" /></textarea>
       <textarea type="text" id="directions" name="directions" /></textarea>
       <input type="text" id="imgLink" name="imgLink" />
+      <input type="text" id="recipeSource" name="recipeSource" />
     </fieldset>
     <input type="submit" value="Submit">
   </form>
@@ -72,6 +74,7 @@
       var ingredients = document.getElementById("ingredients");
       var directions = document.getElementById("directions");
       var imgLink = document.getElementById("imgLink");
+      var recipeSource = document.getElementById("recipeSource");
       var form_el = document.getElementById("myForm");
 
       form_el.addEventListener("submit", function (evt) {
@@ -87,7 +90,8 @@
           two: ingredients.value,
           three: directions.value,
           four: imgLink.value,
-          five: testArray.length
+          five: testArray.length,
+          six: recipeSource.value
         }
 
         //Push data to test array
@@ -101,7 +105,7 @@
           return `<div class="card" style="width:80vw;">
   <img class="card-img-top" src="`+ p.four + `" alt="Card image cap">
   <div class="card-body">
-    <h5 class="card-title">`+ p.one + `</h5>
+    <h5 class="card-title"><a href="`+ p.six + `" target="_blank">` + p.one + `</a></h5>
     <div class="accordion" id="accordionExample`+ p.five + `">
   <div class="card">
     <div class="card-header" id="headingOne`+ p.five + `">
@@ -143,8 +147,10 @@
           two: ingredients.value,
           three: directions.value,
           four: imgLink.value,
-          five: testArray.length
+          five: testArray.length,
+          six: recipeSource.value
         });
+        //console.log("Firebase data:", database);
         form_el.reset();
       }
       const firebaseConfig = {
@@ -159,6 +165,25 @@
       };
 
       firebase.initializeApp(firebaseConfig);
+
+      //TESTING
+
+      var userDataRef = firebase.database().ref("UserData").orderByKey();
+      userDataRef.once("value")
+        .then(function (snapshot) {
+          snapshot.forEach(function (childSnapshot) {
+            var key = childSnapshot.key;
+            var childData = childSnapshot.val();              // childData will be the actual contents of the child
+            //console.log not displaying
+            console.log('Pulling initial data...', childData);
+            var one_val = childSnapshot.val().one;
+            var two_val = childSnapshot.val().two;
+            document.getElementById("output").innerHTML = one_val;
+            document.getElementById("output").innerHTML = two_val;
+          });
+        });
+
+      //===================================
       let recipes = [];
 
       firebase.database().ref('/path/to/ref').on('value', snapshot => {
@@ -168,7 +193,8 @@
           two: ingredients.value,
           three: directions.value,
           four: imgLink.value,
-          five: testArray.length
+          five: testArray.length,
+          six: recipeSource.value
         }
         //Push data to recipes array
         recipes.push(newData);
@@ -196,11 +222,12 @@
           two: ingredients.value,
           three: directions.value,
           four: imgLink.value,
-          five: testArray.length
+          five: testArray.length,
+          six: recipeSource.value
         }
         //Push data to recipes array
         recipes.push(newData);
-        console.log("Firebase data:", newData);
+        //console.log("Firebase data:", newData);
       });
     });
   </script>
