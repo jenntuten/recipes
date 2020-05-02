@@ -35,7 +35,7 @@
 
     fieldset {
       display: grid;
-      width: 15%;
+      /*width: 75%;*/
       min-width: 200px;
       grid-gap: 4px;
       padding: 10px;
@@ -45,6 +45,28 @@
     img {
       max-width: 100%;
       height: auto;
+    }
+
+    #myForm {
+      width: 95%;
+    }
+
+    input,
+    textarea {
+      width: 85%;
+    }
+
+    #submit,
+    #output {
+      padding: 10px;
+      margin: 10px;
+    }
+    #searchBtn,
+    #resetBtn, #submit {
+      max-width: 150px;
+      border-radius:4px;
+      padding: 10px;
+      margin: 10px;
     }
 
     #submit,
@@ -74,8 +96,7 @@
   <h1>Keto Recipes</h1>
 
   <form id="searchForm">
-    <fieldset>
-      Search for a recipe:
+    <fieldset>Search for a recipe:
       <input type="text" id="searchRecipe" name="searchRecipe" />
       <input type="submit" value="Submit" id="searchBtn" style="float:left">
       <input type="reset" value="Reset" id="resetBtn" style="float:left">
@@ -204,7 +225,7 @@ Directions
         //console.log('testing rowItems', rowItems)
         newRecipes.join('');
         //console.log('Recipe array: ', newRecipes)
-        document.getElementById('output').innerHTML = rowItems;
+        document.getElementById('output').innerHTML = rowItems.join('<br>');
       })
       /*}
       loadData();*/
@@ -272,7 +293,7 @@ Directions
           document.getElementById('test-data2').innerHTML = `No results found for "` + searchTerm + `."`;
         }
         else {
-          document.getElementById('test-data').innerHTML = `<h4>Search results for "` + searchTerm + `" (` + result.length + `):</h4>` + searchResults;
+          document.getElementById('test-data').innerHTML = `<h4>Search results for "` + searchTerm + `" (` + result.length + `):</h4>` + searchResults.join('<br>');
         }
 
         //Clear user input
