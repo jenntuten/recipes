@@ -18,7 +18,8 @@
     }
 
     h1,
-    h2 {
+    h2,
+    h3 {
       margin: 10px;
     }
 
@@ -82,7 +83,9 @@
   </form>
   <div id="test-data"></div>
   <div id="test-data2"></div>
+  <div id="moreRecipes"></div>
   <div id="output"></div>
+  <div id="moreRecipes"></div>
   <h2>Add a Recipe</h2>
   <form id="myForm">
     <fieldset>
@@ -200,7 +203,7 @@ Directions
         });
         //console.log('testing rowItems', rowItems)
         newRecipes.join('');
-        console.log('Recipe array: ', newRecipes)
+        //console.log('Recipe array: ', newRecipes)
         document.getElementById('output').innerHTML = rowItems;
       })
       /*}
@@ -221,13 +224,13 @@ Directions
 
       searchForm.addEventListener("submit", function (evt) {
         evt.preventDefault();
-        console.log('search submitted:', document.getElementById("searchRecipe").value)
-        const search = (text) => newRecipes.filter(({ one }) => one.toLowerCase().includes(text));
-        let searchTerm = document.getElementById("searchRecipe").value;
+        console.log('search submitted:', document.getElementById("searchRecipe").value.trim())
+        const search = (text) => newRecipes.filter(({ one }) => one.toLowerCase().includes(text.toLowerCase().trim()));
+        let searchTerm = document.getElementById("searchRecipe").value.trim();
         const result = search(document.getElementById("searchRecipe").value);
 
         console.log('result', result);
-
+        document.getElementById('moreRecipes').innerHTML = `<h3>More Keto Recipes</h3>`;
         let searchResults = result.map(function (p) {
           return `<div class="card" style="width:80vw;">
 <img class="card-img-top" src="`+ p.four + `" alt="Card image cap">
@@ -279,51 +282,53 @@ Directions
 
         /*document.getElementById('output').innerHTML = "";
          console.log('hide function')*/
-       }); //end search
+      }); //end search
 
 
-        //TESTING on click reset
+      //TESTING on click reset
 
-        document.getElementById("resetBtn").addEventListener("click", function () {
-          console.log('reset clicked');
-          document.getElementById('test-data').innerHTML = "";
-          document.getElementById('test-data2').innerHTML = "";
-          //document.getElementById('output').innerHTML = rowItems;
-          //loadData();
-          //document.getElementById('test-data').innerHTML = "";
+      document.getElementById("resetBtn").addEventListener("click", function () {
+        console.log('reset clicked');
+        document.getElementById('test-data').innerHTML = "";
+        document.getElementById('test-data2').innerHTML = "";
+        document.getElementById('moreRecipes').innerHTML = "";
+        //document.getElementById('output').innerHTML = rowItems;
+        //loadData();
+        //document.getElementById('test-data').innerHTML = "";
+      });
+
+      //=========================================================
+
+      //On click submit
+      form_el.addEventListener("submit", function (evt) {
+        evt.preventDefault();
+        console.log('submitted')
+        //Pull user input
+        one = document.getElementById("recipeName").value;
+        two = document.getElementById("ingredients").value;
+        three = document.getElementById("directions").value;
+        four = document.getElementById("imgLink").value;
+        six = document.getElementById("recipeSource").value;
+        five = newRecipes.length;
+
+        console.log('one', one)
+
+        //Push user input to Firebase
+        database.ref().push({
+          one: one,
+          two: two,
+          three: three,
+          four: four,
+          five: five,
+          six: six
         });
+        console.log('recipes', newRecipes)
 
-        //=========================================================
-
-        //On click submit
-        form_el.addEventListener("submit", function (evt) {
-          evt.preventDefault();
-          console.log('submitted')
-          //Pull user input
-          one = document.getElementById("recipeName").value;
-          two = document.getElementById("ingredients").value;
-          three = document.getElementById("directions").value;
-          four = document.getElementById("imgLink").value;
-          six = document.getElementById("recipeSource").value;
-          five = newRecipes.length;
-
-          console.log('one', one)
-
-          //Push user input to Firebase
-          database.ref().push({
-            one: one,
-            two: two,
-            three: three,
-            four: four,
-            five: five,
-            six: six
-          });
-          console.log('recipes', newRecipes)
-
-          //Clear user input
-          form_el.reset();
-        })
+        //Clear user input
+        form_el.reset();
       })
+    })
   </script>
 </body>
+
 </html>
