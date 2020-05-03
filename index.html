@@ -319,6 +319,7 @@ Directions
           if (result.length === 0) {
             console.log('no results found')
             document.getElementById('test-data2').innerHTML = `No results found for "` + searchTerm + `."`;
+            document.getElementById('test-data').innerHTML = "";
           }
           else {
             document.getElementById('test-data').innerHTML = `<h4>Search results for "` + searchTerm + `" (` + result.length + `):</h4>` + searchResults.join('<br>');
