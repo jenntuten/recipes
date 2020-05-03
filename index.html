@@ -166,7 +166,6 @@
 
       //Array to store recipe data
       let newRecipes = [];
-      console.log("new recipes: ", newRecipes)
       let database = firebase.database();
 
       database.ref().on("child_added", function (snapshot) {
@@ -183,51 +182,37 @@
 
         //Push data to newRecipes array
         newRecipes.push(newData);
-        console.log('new Recipes after snapshot: ', newRecipes)
+        //console.log('new Recipes after snapshot: ', newRecipes)
         mapResults();
       }); //end snapshot
 
-      //TEST map function======================================================
-      //maps array on reset but not on page load
+      //Set up HTML layout for recipe cards
+      let cardHTML1 = `<div class="card" style="width:80vw;"><img class="card-img-top" src="`
+      let cardHTML2 = `" alt="Card image cap"><div class="card-body"><h5 class="card-title"><a href="`
+      let cardHTML3 = `" target="_blank">`
+      let cardHTML4 = `</a></h5><div class="accordion" id="accordionExample`
+      let cardHTML5 = `"><div class="card"><div class="card-header" id="headingOne`
+      let cardHTML6 = `"><h5 class="mb-0"><button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne`
+      let cardHTML7 = `" aria-expanded="false" aria-controls="collapseOne">Ingredients</button></h5></div><div id="collapseOne`
+      let cardHTML8 = `" class="collapse" aria-labelledby="headingOne`
+      let cardHTML9 = `" data-parent="#accordionExample`
+      let cardHTML10 = `"><div class="card-body-ingredients">`
+      let cardHTML11 = `</div></div></div><div class="card"><div class="card-header" id="headingTwo`
+      let cardHTML12 = `"><h5 class="mb-0"><button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo`
+      let cardHTML13 = `" aria-expanded="false" aria-controls="collapseTwo">Directions</button></h5></div><div id="collapseTwo`
+      let cardHTML14 = `" class="collapse" aria-labelledby="headingTwo`
+      let cardHTML15 = `" data-parent="#accordionExample`
+      let cardHTML16 = `"><div class="card-body-directions">`
+      let cardHTML17 = `</div></div></div></div></div></div>`;
+
       function mapResults() {
         let mappedItems = newRecipes.map(function (p) {
-          return `<div class="card" style="width:80vw;">
-<img class="card-img-top" src="`+ p.four + `" alt="Card image cap">
-<div class="card-body">
-<h5 class="card-title"><a href="`+ p.six + `" target="_blank">` + p.one + `</a></h5>
-<div class="accordion" id="accordionExample`+ p.five + `">
-<div class="card">
-<div class="card-header" id="headingOne`+ p.five + `">
-<h5 class="mb-0">
-<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne`+ p.five + `" aria-expanded="false" aria-controls="collapseOne">
-Ingredients
-</button>
-</h5>
-</div>
-<div id="collapseOne`+ p.five + `" class="collapse" aria-labelledby="headingOne` + p.five + `" data-parent="#accordionExample` + p.five + `">
-<div class="card-body-ingredients">`+ p.two +
-            `</div>
-</div>
-</div>
-<div class="card">
-<div class="card-header" id="headingTwo`+ p.five + `">
-<h5 class="mb-0">
-<button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo`+ p.five + `" aria-expanded="false" aria-controls="collapseTwo">
-Directions
-</button>
-</h5>
-</div>
-<div id="collapseTwo`+ p.five + `" class="collapse" aria-labelledby="headingTwo` + p.five + `" data-parent="#accordionExample` + p.five + `">
-<div class="card-body-directions">`+ p.three +
-            `</div>
-</div>
-</div>
-</div>
-</div>
-</div>`
+          return cardHTML1 + p.four + cardHTML2 + p.six + cardHTML3 + p.one + cardHTML4 + p.five + cardHTML5 + p.five + cardHTML6 + p.five +
+            cardHTML7 + p.five + cardHTML8 + p.five + cardHTML9 + p.five + cardHTML10 + p.two + cardHTML11 + p.five + cardHTML12 +
+            p.five + cardHTML13 + p.five + cardHTML14 + p.five + cardHTML15 + p.five + cardHTML16 + p.three + cardHTML17;
         });
         document.getElementById('output').innerHTML = mappedItems.join('<br>');
-      } //end mapResults()
+      }
 
       //On click SEARCH
       searchForm.addEventListener("submit", function (evt) {
@@ -243,43 +228,11 @@ Directions
         let result = filterByValue(newRecipes, searchTerm);
         console.log('Result: ', result)
         let searchResults = result.map(function (p) {
-          return `<div class="card" style="width:80vw;">
-<img class="card-img-top" src="`+ p.four + `" alt="Card image cap">
-<div class="card-body">
-<h5 class="card-title"><a href="`+ p.six + `" target="_blank">` + p.one + `</a></h5>
-<div class="accordion" id="accordionExample`+ p.five + `">
-<div class="card">
-<div class="card-header" id="headingOne`+ p.five + `">
-<h5 class="mb-0">
-<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne`+ p.five + `" aria-expanded="false" aria-controls="collapseOne">
-Ingredients
-</button>
-</h5>
-</div>
-<div id="collapseOne`+ p.five + `" class="collapse" aria-labelledby="headingOne` + p.five + `" data-parent="#accordionExample` + p.five + `">
-<div class="card-body-ingredients">`+ p.two +
-            `</div>
-</div>
-</div>
-<div class="card">
-<div class="card-header" id="headingTwo`+ p.five + `">
-<h5 class="mb-0">
-<button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo`+ p.five + `" aria-expanded="false" aria-controls="collapseTwo">
-Directions
-</button>
-</h5>
-</div>
-<div id="collapseTwo`+ p.five + `" class="collapse" aria-labelledby="headingTwo` + p.five + `" data-parent="#accordionExample` + p.five + `">
-<div class="card-body-directions">`+ p.three +
-            `</div>
-</div>
-</div>
-</div>
-</div>
-</div>`
+          return cardHTML1 + p.four + cardHTML2 + p.six + cardHTML3 + p.one + cardHTML4 + p.five + cardHTML5 + p.five + cardHTML6 + p.five +
+            cardHTML7 + p.five + cardHTML8 + p.five + cardHTML9 + p.five + cardHTML10 + p.two + cardHTML11 + p.five + cardHTML12 +
+            p.five + cardHTML13 + p.five + cardHTML14 + p.five + cardHTML15 + p.five + cardHTML16 + p.three + cardHTML17;
         })
         if (result.length === 0) {
-          console.log('no results found')
           document.getElementById('test-data2').innerHTML = `No results found for "` + searchTerm + `."`;
           document.getElementById('test-data').innerHTML = "";
         }
@@ -292,12 +245,10 @@ Directions
 
         //Hide rest of recipes
         document.getElementById('output').innerHTML = "";
-        console.log('hide function')
       }); //end search
 
       //On click reset
       document.getElementById("resetBtn").addEventListener("click", function () {
-        console.log('reset clicked', newRecipes);
         document.getElementById('test-data').innerHTML = "";
         document.getElementById('test-data2').innerHTML = "";
         document.getElementById('moreRecipes').innerHTML = "";
@@ -307,7 +258,6 @@ Directions
       //On click submit (add recipe)
       form_el.addEventListener("submit", function (evt) {
         evt.preventDefault();
-        console.log('submitted');
 
         //Pull user input
         one = document.getElementById("recipeName").value;
@@ -326,7 +276,6 @@ Directions
           five: five,
           six: six
         });
-        console.log('recipes', newRecipes)
 
         //Clear user input
         form_el.reset();
