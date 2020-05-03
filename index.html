@@ -61,10 +61,12 @@
       padding: 10px;
       margin: 10px;
     }
+
     #searchBtn,
-    #resetBtn, #submit {
+    #resetBtn,
+    #submit {
       max-width: 150px;
-      border-radius:4px;
+      border-radius: 4px;
       padding: 10px;
       margin: 10px;
     }
@@ -165,9 +167,7 @@
       //Array to store recipe data
       let newRecipes = [];
       console.log("new recipes: ", newRecipes)
-
       let database = firebase.database();
-
 
       database.ref().on("child_added", function (snapshot) {
 
@@ -180,11 +180,11 @@
           five: newRecipes.length,
           six: snapshot.val().six
         }
+
         //Push data to newRecipes array
         newRecipes.push(newData);
 
         //TEST NEW TABLE==============================
-        //function loadData () {
         let rowItems = newRecipes.map(function (p) {
 
           return `<div class="card" style="width:80vw;">
@@ -222,38 +222,16 @@ Directions
 </div>
 </div>`
         });
-        //console.log('testing rowItems', rowItems)
         newRecipes.join('');
-        //console.log('Recipe array: ', newRecipes)
+        console.log('Recipe array: ', newRecipes)
         document.getElementById('output').innerHTML = rowItems.join('<br>');
-      })
-      /*}
-      loadData();*/
+      });
 
-
-      //TEST 4.29==============================================
-      //Create search function w/submit button, clear search on submit-DONE
-      //Create new array of results-DONE
-      //Create cards displaying search results-DONE
-      //*Need to hide all other results and clear this div on "clear/reset" to restore the full list.
-      //text saying, "search results for (searchString)"-shows "search results for" AND "no results found" when none are found
-      //Clear "no results found," add Clear button, etc
-      //add event listener on key after "no results found.."-DONE
-
-
-      //On click SEARCH
-
-      searchForm.addEventListener("submit", function (evt) {
-        evt.preventDefault();
-        console.log('search submitted:', document.getElementById("searchRecipe").value.trim())
-        const search = (text) => newRecipes.filter(({ one }) => one.toLowerCase().includes(text.toLowerCase().trim()));
-        let searchTerm = document.getElementById("searchRecipe").value.trim();
-        const result = search(document.getElementById("searchRecipe").value);
-
-        console.log('result', result);
-        document.getElementById('moreRecipes').innerHTML = `<h3>More Keto Recipes</h3>`;
-        let searchResults = result.map(function (p) {
-          return `<div class="card" style="width:80vw;">
+        //TEST map function======================================================
+        //maps array on reset but not on page load
+        function mapResults() {
+          let mappedItems = newRecipes.map(function (p) {
+            return `<div class="card" style="width:80vw;">
 <img class="card-img-top" src="`+ p.four + `" alt="Card image cap">
 <div class="card-body">
 <h5 class="card-title"><a href="`+ p.six + `" target="_blank">` + p.one + `</a></h5>
@@ -268,7 +246,7 @@ Ingredients
 </div>
 <div id="collapseOne`+ p.five + `" class="collapse" aria-labelledby="headingOne` + p.five + `" data-parent="#accordionExample` + p.five + `">
 <div class="card-body-ingredients">`+ p.two +
-            `</div>
+              `</div>
 </div>
 </div>
 <div class="card">
@@ -281,74 +259,121 @@ Directions
 </div>
 <div id="collapseTwo`+ p.five + `" class="collapse" aria-labelledby="headingTwo` + p.five + `" data-parent="#accordionExample` + p.five + `">
 <div class="card-body-directions">`+ p.three +
-            `</div>
+              `</div>
 </div>
 </div>
 </div>
 </div>
 </div>`
-        })
-        if (result.length === 0) {
-          console.log('no results found')
-          document.getElementById('test-data2').innerHTML = `No results found for "` + searchTerm + `."`;
+          });
+          document.getElementById('output').innerHTML = mappedItems.join('<br>');
         }
-        else {
-          document.getElementById('test-data').innerHTML = `<h4>Search results for "` + searchTerm + `" (` + result.length + `):</h4>` + searchResults.join('<br>');
-        }
+        //TEST results on page load=======================================
+        //mapResults();
+        //=================================================
 
-        //Clear user input
-        searchForm.reset();
+        //On click SEARCH
+        searchForm.addEventListener("submit", function (evt) {
+          evt.preventDefault();
+          console.log('search submitted:', document.getElementById("searchRecipe").value.trim())
+          const search = (text) => newRecipes.filter(({ one }) => one.toLowerCase().includes(text.toLowerCase().trim()));
+          let searchTerm = document.getElementById("searchRecipe").value.trim();
+          const result = search(document.getElementById("searchRecipe").value);
+          console.log('result', result);
+          let searchResults = result.map(function (p) {
+            return `<div class="card" style="width:80vw;">
+<img class="card-img-top" src="`+ p.four + `" alt="Card image cap">
+<div class="card-body">
+<h5 class="card-title"><a href="`+ p.six + `" target="_blank">` + p.one + `</a></h5>
+<div class="accordion" id="accordionExample`+ p.five + `">
+<div class="card">
+<div class="card-header" id="headingOne`+ p.five + `">
+<h5 class="mb-0">
+<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne`+ p.five + `" aria-expanded="false" aria-controls="collapseOne">
+Ingredients
+</button>
+</h5>
+</div>
+<div id="collapseOne`+ p.five + `" class="collapse" aria-labelledby="headingOne` + p.five + `" data-parent="#accordionExample` + p.five + `">
+<div class="card-body-ingredients">`+ p.two +
+              `</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header" id="headingTwo`+ p.five + `">
+<h5 class="mb-0">
+<button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo`+ p.five + `" aria-expanded="false" aria-controls="collapseTwo">
+Directions
+</button>
+</h5>
+</div>
+<div id="collapseTwo`+ p.five + `" class="collapse" aria-labelledby="headingTwo` + p.five + `" data-parent="#accordionExample` + p.five + `">
+<div class="card-body-directions">`+ p.three +
+              `</div>
+</div>
+</div>
+</div>
+</div>
+</div>`
+          })
+          if (result.length === 0) {
+            console.log('no results found')
+            document.getElementById('test-data2').innerHTML = `No results found for "` + searchTerm + `."`;
+          }
+          else {
+            document.getElementById('test-data').innerHTML = `<h4>Search results for "` + searchTerm + `" (` + result.length + `):</h4>` + searchResults.join('<br>');
+          }
 
-        //TESTING Hide rest of recipes
+          //Clear user input
+          searchForm.reset();
 
-        /*document.getElementById('output').innerHTML = "";
-         console.log('hide function')*/
-      }); //end search
+          //Hide rest of recipes
+          document.getElementById('output').innerHTML = "";
+          console.log('hide function')
+        }); //end search
 
+        //on click reset
 
-      //TESTING on click reset
-
-      document.getElementById("resetBtn").addEventListener("click", function () {
-        console.log('reset clicked');
-        document.getElementById('test-data').innerHTML = "";
-        document.getElementById('test-data2').innerHTML = "";
-        document.getElementById('moreRecipes').innerHTML = "";
-        //document.getElementById('output').innerHTML = rowItems;
-        //loadData();
-        //document.getElementById('test-data').innerHTML = "";
-      });
-
-      //=========================================================
-
-      //On click submit
-      form_el.addEventListener("submit", function (evt) {
-        evt.preventDefault();
-        console.log('submitted')
-        //Pull user input
-        one = document.getElementById("recipeName").value;
-        two = document.getElementById("ingredients").value;
-        three = document.getElementById("directions").value;
-        four = document.getElementById("imgLink").value;
-        six = document.getElementById("recipeSource").value;
-        five = newRecipes.length;
-
-        console.log('one', one)
-
-        //Push user input to Firebase
-        database.ref().push({
-          one: one,
-          two: two,
-          three: three,
-          four: four,
-          five: five,
-          six: six
+        document.getElementById("resetBtn").addEventListener("click", function () {
+          console.log('reset clicked', newRecipes);
+          document.getElementById('test-data').innerHTML = "";
+          document.getElementById('test-data2').innerHTML = "";
+          document.getElementById('moreRecipes').innerHTML = "";
+          mapResults();
         });
-        console.log('recipes', newRecipes)
 
-        //Clear user input
-        form_el.reset();
+        //=========================================================
+
+        //On click submit
+        form_el.addEventListener("submit", function (evt) {
+          evt.preventDefault();
+          console.log('submitted')
+          //Pull user input
+          one = document.getElementById("recipeName").value;
+          two = document.getElementById("ingredients").value;
+          three = document.getElementById("directions").value;
+          four = document.getElementById("imgLink").value;
+          six = document.getElementById("recipeSource").value;
+          five = newRecipes.length;
+
+          console.log('one', one)
+
+          //Push user input to Firebase
+          database.ref().push({
+            one: one,
+            two: two,
+            three: three,
+            four: four,
+            five: five,
+            six: six
+          });
+          console.log('recipes', newRecipes)
+
+          //Clear user input
+          form_el.reset();
+        })//end submit
       })
-    })
+    
   </script>
 </body>
 
