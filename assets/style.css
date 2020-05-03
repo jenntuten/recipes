@@ -1,0 +1,123 @@
+    body {
+      background: #ECEFF1;
+      color: rgba(0, 0, 0, 0.87);
+      font-family: Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      margin: 10px;
+    }
+
+    .card-body-ingredients,
+    .card-body-directions {
+      white-space: pre-wrap;
+      margin: 10px;
+    }
+
+    .card {
+      margin: 0 auto;
+    }
+
+    fieldset {
+      display: grid;
+      /*width: 75%;*/
+      min-width: 200px;
+      grid-gap: 4px;
+      padding: 10px;
+      margin: 10px;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    #myForm {
+      width: 95%;
+    }
+
+    input,
+    textarea {
+      width: 85%;
+    }
+
+    #submit,
+    #output {
+      padding: 10px;
+      margin: 10px;
+    }
+
+    #searchBtn,
+    #resetBtn,
+    #submit {
+      max-width: 150px;
+      border-radius: 4px;
+      padding: 10px;
+      margin: 10px;
+    }
+
+    #submit,
+    #output,
+    #test-data2 {
+      padding: 10px;
+      margin: 10px;
+    }
+
+    /*
+    #page-cont {
+      width: 50%;
+      height: 200px;
+      background: aqua;
+      margin: auto;
+      padding: 10px;
+    }
+
+    #previous {
+      position: relative;
+      float: left;
+    }
+
+    #next {
+      float: right;
+      position: relative;
+    }
+
+    .ltarrow,
+    .rtarrow {
+      position: absolute;
+      bottom: 1px;
+    }
+
+    .ltarrow {
+      left: -8px;
+    }
+
+    .rtarrow {
+      right: -8px;
+    }*/
+
+    /*update if able to get pagination working*/
+
+    #page-cont {
+      /*display:none;*/
+      width: 50%;
+      margin: auto;
+      padding: 10px;
+    }
+
+    @media (max-width: 600px) {
+      body,
+      #message {
+        margin-top: 0;
+        background: white;
+        box-shadow: none;
+      }
+      body {
+        border-top: 16px solid #ffa100;
+      }
+    }

@@ -7,97 +7,12 @@
   <title>Keto Recipes</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
     crossorigin="anonymous">
-
-  <style media="screen">
-    body {
-      background: #ECEFF1;
-      color: rgba(0, 0, 0, 0.87);
-      font-family: Roboto, Helvetica, Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-
-    h1,
-    h2,
-    h3,
-    h4 {
-      margin: 10px;
-    }
-
-    .card-body-ingredients,
-    .card-body-directions {
-      white-space: pre-wrap;
-      margin: 10px;
-    }
-
-    .card {
-      margin: 0 auto;
-    }
-
-    fieldset {
-      display: grid;
-      /*width: 75%;*/
-      min-width: 200px;
-      grid-gap: 4px;
-      padding: 10px;
-      margin: 10px;
-    }
-
-    img {
-      max-width: 100%;
-      height: auto;
-    }
-
-    #myForm {
-      width: 95%;
-    }
-
-    input,
-    textarea {
-      width: 85%;
-    }
-
-    #submit,
-    #output {
-      padding: 10px;
-      margin: 10px;
-    }
-
-    #searchBtn,
-    #resetBtn,
-    #submit {
-      max-width: 150px;
-      border-radius: 4px;
-      padding: 10px;
-      margin: 10px;
-    }
-
-    #submit,
-    #output,
-    #test-data2 {
-      padding: 10px;
-      margin: 10px;
-    }
-
-    @media (max-width: 600px) {
-      body,
-      #message {
-        margin-top: 0;
-        background: white;
-        box-shadow: none;
-      }
-      body {
-        border-top: 16px solid #ffa100;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="assets/style.css">
+  <script type="text/javascript"></script>
 </head>
 
 <body>
-
-
   <h1>Keto Recipes</h1>
-
   <form id="searchForm">
     <fieldset>Search for a recipe:
       <input type="text" id="searchRecipe" name="searchRecipe" />
@@ -110,6 +25,21 @@
   <div id="moreRecipes"></div>
   <div id="output"></div>
   <div id="moreRecipes"></div>
+
+  <!--<div id="page-cont" style="text-align:center;">
+    <input type="button" id="first" onclick="firstPage()" value="first" />
+    <input type="button" id="next" onclick="nextPage()" value="next" />
+    <input type="button" id="previous" onclick="previousPage()" value="previous" />
+    <input type="button" id="last" onclick="lastPage()" value="last" />
+
+    <div id="page-cont" style="text-align:center;">
+        <div id="next" onclick="nextPage()" value="Next">Next <span class="rtarrow">&#8250;</span></div>
+        <div id="previous" onclick="previousPage()" value="previous"><span class="ltarrow">&#8249;</span> Previous</div>
+      </div>-->
+
+  <!--<div id="list"></div>-->
+  </div>
+
   <h2>Add a Recipe</h2>
   <form id="myForm">
     <fieldset>
@@ -124,164 +54,19 @@
     </fieldset>
     <input type="submit" value="Submit" id="submit">
   </form>
+
+
+
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
     crossorigin="anonymous"></script>
+  <script src="assets/pages.js"></script>
+  <script src="assets/app.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
     crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
     crossorigin="anonymous"></script>
   <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js"></script>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      var recipeName = document.getElementById("recipeName");
-      var ingredients = document.getElementById("ingredients");
-      var directions = document.getElementById("directions");
-      var imgLink = document.getElementById("imgLink");
-      var recipeSource = document.getElementById("recipeSource");
-      var searchForm = document.getElementById("searchForm");
-      var form_el = document.getElementById("myForm");
-      var resultsFound = document.getElementById("test-data2");
-      var el = document.getElementById("output");
-
-      //Clear "No results found text" on input
-      /*searchForm.addEventListener('input', updateValue);
-      function updateValue() {
-        resultsFound.textContent = "";
-      }*/
-
-      // Initialize Firebase
-      const firebaseConfig = {
-        apiKey: "AIzaSyAM5C9e5cfov13sVnRpzV7mTKmbscYrvbA",
-        authDomain: "recipes-8b628.firebaseapp.com",
-        databaseURL: "https://recipes-8b628.firebaseio.com",
-        projectId: "recipes-8b628",
-        storageBucket: "recipes-8b628.appspot.com",
-        messagingSenderId: "144315483609",
-        appId: "1:144315483609:web:9c12d4bbe79b803a0305c8",
-        measurementId: "G-NETVQG5Q87"
-      };
-
-      firebase.initializeApp(firebaseConfig);
-
-      //Array to store recipe data
-      let newRecipes = [];
-      let database = firebase.database();
-
-      database.ref().on("child_added", function (snapshot) {
-
-        //Create new object to store snapshots and calculations
-        let newData = {
-          one: snapshot.val().one,
-          two: snapshot.val().two,
-          three: snapshot.val().three,
-          four: snapshot.val().four,
-          five: newRecipes.length,
-          six: snapshot.val().six
-        }
-
-        //Push data to newRecipes array
-        newRecipes.push(newData);
-        //console.log('new Recipes after snapshot: ', newRecipes)
-        mapResults();
-      }); //end snapshot
-
-      //Set up HTML layout for recipe cards
-      let cardHTML1 = `<div class="card" style="width:80vw;"><img class="card-img-top" src="`
-      let cardHTML2 = `" alt="Card image cap"><div class="card-body"><h5 class="card-title"><a href="`
-      let cardHTML3 = `" target="_blank">`
-      let cardHTML4 = `</a></h5><div class="accordion" id="accordionExample`
-      let cardHTML5 = `"><div class="card"><div class="card-header" id="headingOne`
-      let cardHTML6 = `"><h5 class="mb-0"><button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne`
-      let cardHTML7 = `" aria-expanded="false" aria-controls="collapseOne">Ingredients</button></h5></div><div id="collapseOne`
-      let cardHTML8 = `" class="collapse" aria-labelledby="headingOne`
-      let cardHTML9 = `" data-parent="#accordionExample`
-      let cardHTML10 = `"><div class="card-body-ingredients">`
-      let cardHTML11 = `</div></div></div><div class="card"><div class="card-header" id="headingTwo`
-      let cardHTML12 = `"><h5 class="mb-0"><button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo`
-      let cardHTML13 = `" aria-expanded="false" aria-controls="collapseTwo">Directions</button></h5></div><div id="collapseTwo`
-      let cardHTML14 = `" class="collapse" aria-labelledby="headingTwo`
-      let cardHTML15 = `" data-parent="#accordionExample`
-      let cardHTML16 = `"><div class="card-body-directions">`
-      let cardHTML17 = `</div></div></div></div></div></div>`;
-
-      function mapResults() {
-        let mappedItems = newRecipes.map(function (p) {
-          return cardHTML1 + p.four + cardHTML2 + p.six + cardHTML3 + p.one + cardHTML4 + p.five + cardHTML5 + p.five + cardHTML6 + p.five +
-            cardHTML7 + p.five + cardHTML8 + p.five + cardHTML9 + p.five + cardHTML10 + p.two + cardHTML11 + p.five + cardHTML12 +
-            p.five + cardHTML13 + p.five + cardHTML14 + p.five + cardHTML15 + p.five + cardHTML16 + p.three + cardHTML17;
-        });
-        document.getElementById('output').innerHTML = mappedItems.join('<br>');
-      }
-
-      //On click SEARCH
-      searchForm.addEventListener("submit", function (evt) {
-        evt.preventDefault();
-
-        //Filters by recipe name only
-        //const search = (text) => newRecipes.filter(({ one }) => one.toLowerCase().includes(text.toLowerCase().trim()));
-        //const result = search(document.getElementById("searchRecipe").value);
-
-        let searchTerm = document.getElementById("searchRecipe").value.trim();
-        console.log('searchTerm: ', searchTerm);
-        function filterByValue(array, string) { return array.filter(o => { return Object.keys(o).some(k => { if (typeof o[k] === 'string') return o[k].toLowerCase().includes(string.toLowerCase()); }); }); }
-        let result = filterByValue(newRecipes, searchTerm);
-        console.log('Result: ', result)
-        let searchResults = result.map(function (p) {
-          return cardHTML1 + p.four + cardHTML2 + p.six + cardHTML3 + p.one + cardHTML4 + p.five + cardHTML5 + p.five + cardHTML6 + p.five +
-            cardHTML7 + p.five + cardHTML8 + p.five + cardHTML9 + p.five + cardHTML10 + p.two + cardHTML11 + p.five + cardHTML12 +
-            p.five + cardHTML13 + p.five + cardHTML14 + p.five + cardHTML15 + p.five + cardHTML16 + p.three + cardHTML17;
-        })
-        if (result.length === 0) {
-          document.getElementById('test-data2').innerHTML = `No results found for "` + searchTerm + `."`;
-          document.getElementById('test-data').innerHTML = "";
-        }
-        else {
-          document.getElementById('test-data').innerHTML = `<h4>Search results for "` + searchTerm + `" (` + result.length + `):</h4>` + searchResults.join('<br>');
-        }
-
-        //Clear user input
-        searchForm.reset();
-
-        //Hide rest of recipes
-        document.getElementById('output').innerHTML = "";
-      }); //end search
-
-      //On click reset
-      document.getElementById("resetBtn").addEventListener("click", function () {
-        document.getElementById('test-data').innerHTML = "";
-        document.getElementById('test-data2').innerHTML = "";
-        document.getElementById('moreRecipes').innerHTML = "";
-        mapResults();
-      });
-
-      //On click submit (add recipe)
-      form_el.addEventListener("submit", function (evt) {
-        evt.preventDefault();
-
-        //Pull user input
-        one = document.getElementById("recipeName").value;
-        two = document.getElementById("ingredients").value;
-        three = document.getElementById("directions").value;
-        four = document.getElementById("imgLink").value;
-        six = document.getElementById("recipeSource").value;
-        five = newRecipes.length;
-
-        //Push user input to Firebase
-        database.ref().push({
-          one: one,
-          two: two,
-          three: three,
-          four: four,
-          five: five,
-          six: six
-        });
-
-        //Clear user input
-        form_el.reset();
-      })//end submit
-    })
-  </script>
 </body>
 
 </html>
